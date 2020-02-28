@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ng-container *ngIf="profile$ | async as profile">
-      <ion-chip slot="start">
+      <ion-chip slot="start" (click)="presentAlertLogout()">
         <ion-avatar>
           <img [src]="profile.avatar">
         </ion-avatar>

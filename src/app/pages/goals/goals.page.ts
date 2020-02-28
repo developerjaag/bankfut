@@ -1,6 +1,7 @@
 // core and third party libraries
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
+
 import { Store, select } from '@ngrx/store';
 
 // rxjs
@@ -13,6 +14,7 @@ import { GoalState } from '@store/states/goals.state';
 // actions
 import { activeLoading, clearMessageToast } from '@store/actions/ui/ui.actions';
 import { requestAddOneGoal, requestEditOneGoal } from '@store/actions/goals/goals.actions';
+import { authLogOut } from '@store/actions/auth/auth.actions';
 
 // selectors
 import { getLoading, getToast } from '@store/selectors/ui.selectors';
@@ -49,7 +51,8 @@ export class GoalsPage implements OnInit, OnDestroy {
   constructor(
     private store: Store<GoalState>,
     public notificationsService: NotificationsService,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public alertController: AlertController
   ) {
     this.loading$ = this.store.pipe(select(getLoading));
     this.toast$ = this.store.pipe(
@@ -134,6 +137,31 @@ export class GoalsPage implements OnInit, OnDestroy {
 
   dispatchEditGoal(goal: Goal) {
     const action = requestEditOneGoal({ goal });
+    this.store.dispatch(action);
+  }
+
+  async presentAlertLogout() {
+    const alert = await this.alertController.create({
+      header: 'Cerrar sesión?',
+      cssClass: 'ion-text-center',
+      buttons: [
+        {
+          text: 'Continuar',
+          role: 'cancel'
+        }, {
+          text: 'Salir',
+          handler: () => {
+            this.logout();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  logout() {
+    const action = authLogOut();
     this.store.dispatch(action);
   }
 

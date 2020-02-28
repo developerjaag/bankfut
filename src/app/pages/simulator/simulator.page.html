@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ng-container *ngIf="profile$ | async as profile">
-      <ion-chip slot="start">
+      <ion-chip slot="start" (click)="presentAlertLogout()">
         <ion-avatar>
           <img [src]="profile.avatar">
         </ion-avatar>
@@ -31,11 +31,14 @@
     </ion-card-header>
     <ion-card-content>
 
-      <ion-list *ngFor="let rule of filterRulesByGoal(goal.uid)">
+      <ion-list *ngFor="let rule of filterRulesByGoal(goal.uid); let last = last">
         <ion-list-header>
           <ion-label>
             <p>
               {{ rule.team.shortName }} ({{ rule.event }} - {{ rule.valueToSave | currency }})
+              <ion-text color="success">
+                <h3 *ngIf="rule && rule.totalSaved">Ahorrado: {{ rule.totalSaved }}</h3>
+              </ion-text>
             </p>
           </ion-label>
         </ion-list-header>
@@ -44,7 +47,8 @@
 
           <span [ngSwitch]="rule.event">
             <p *ngSwitchCase="'Jugar'">
-              <b>JUGAR:</b> {{ rule.valueToSave | currency }} ahorrado por jugar contra
+              <b>JUGAR:</b> {{ rule.valueToSave | currency }} ahorrado por jugar
+              contra
               <ng-container *ngIf="match.homeTeam.id === rule.team.id; else elseOtherTeamTemplate">
                 {{ match.awayTeam.name }}
               </ng-container>
@@ -110,6 +114,7 @@
 
 
     </ion-card-content>
+
   </ion-card>
 
 

@@ -1,7 +1,8 @@
 // core and third party libraries
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
+
 
 // rxjs
 import { Subject, Observable, combineLatest } from 'rxjs';
@@ -11,7 +12,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { GoalState } from '@store/states/goals.state';
 
 // actions
-import { activeLoading } from '@store/actions/ui/ui.actions';
+import { authLogOut } from '@store/actions/auth/auth.actions';
+
 
 // selectors
 import { getLoading, getToast } from '@store/selectors/ui.selectors';
@@ -51,7 +53,8 @@ export class SimulatorPage implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<GoalState>,
-    public notificationsService: NotificationsService
+    public notificationsService: NotificationsService,
+    public alertController: AlertController
   ) {
     this.loading$ = this.store.pipe(select(getLoading));
     this.toast$ = this.store.pipe(
@@ -73,6 +76,14 @@ export class SimulatorPage implements OnInit, OnDestroy {
       this.matches = data[2];
     });
 
+  }
+
+  sumRule(rule: Rule, toAdd: number) {
+    if (rule.totalSaved) {
+      rule.totalSaved = rule.totalSaved + toAdd;
+    } else {
+      rule.totalSaved = toAdd;
+    }
   }
 
   ngOnInit() {
@@ -97,8 +108,29 @@ export class SimulatorPage implements OnInit, OnDestroy {
     });
   }
 
-  private dispatchLoading() {
-    const action = activeLoading();
+
+  async presentAlertLogout() {
+    const alert = await this.alertController.create({
+      header: 'Cerrar sesión?',
+      cssClass: 'ion-text-center',
+      buttons: [
+        {
+          text: 'Continuar',
+          role: 'cancel'
+        }, {
+          text: 'Salir',
+          handler: () => {
+            this.logout();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  logout() {
+    const action = authLogOut();
     this.store.dispatch(action);
   }
 
