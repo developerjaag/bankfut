@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Team } from '@models/team.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
