@@ -1,6 +1,6 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { addGoals, addOneGoal } from '@store/actions/goals/goals.actions';
+import { addGoals, addOneGoal, editOneGoal } from '@store/actions/goals/goals.actions';
 import { GoalState, goalAdapter } from '@store/states/goals.state';
 
 
@@ -17,6 +17,10 @@ export const iGoalReducer = createReducer(
 
     on(addOneGoal, (state, { goal }) => {
         return goalAdapter.addOne(goal, state);
+    }),
+
+    on(editOneGoal, (state, { goal }) => {
+        return goalAdapter.updateOne(goal, state);
     })
 
 );

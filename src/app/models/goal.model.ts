@@ -4,6 +4,7 @@ export interface Goal {
     value: number;
     dateLimit: Date;
     description?: string;
+    numberRules?: number;
     type: 'Buy' | 'Travel' | 'Do' | 'Save';
     createAt?: any;
 }

@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="segment">
+      <ion-segment-button value="Goal">
+        <ion-label>Meta</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Rules" [disabled]="!currentGoal">
+        <ion-label>
+          Reglas
+          <ion-badge color="success" *ngIf="currentGoal && currentGoal.numberRules && currentGoal.numberRules > 0">
+            {{currentGoal.numberRules}}
+          </ion-badge>
+          <ion-badge color="danger" *ngIf="currentGoal && currentGoal.numberRules && currentGoal.numberRules === 0">
+            {{currentGoal.numberRules}}
+          </ion-badge>
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ng-container [ngSwitch]="segment">
+    <ng-container *ngSwitchCase="'Goal'">
+
+      <form role="form" [formGroup]="form">
+        <ion-list>
+          <ion-radio-group name="auto" formControlName="type">
+            <ion-list-header class="ion-text-center">
+              <ion-label>¿Qué quieres lograr?</ion-label>
+            </ion-list-header>
+
+            <ion-item lines="none">
+              <ion-label>Comprar algo</ion-label>
+              <ion-radio value="Buy"></ion-radio>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-label>Viajar</ion-label>
+              <ion-radio value="Travel"></ion-radio>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-label>Hacer algo</ion-label>
+              <ion-radio value="Do"></ion-radio>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-label>Solo ahorrar</ion-label>
+              <ion-radio value="Save"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+
+        <ion-item class="ion-margin-top">
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="description"></ion-textarea>
+        </ion-item>
+
+        <ion-item class="ion-margin-top">
+          <ion-label position="floating">¿Cúanto quieres ahorrar?</ion-label>
+          <ion-input inputmode="numeric" type="number" formControlName="value"></ion-input>
+        </ion-item>
+
+        <ion-item class="ion-margin-top">
+          <ion-label>Plazo para lograrla</ion-label>
+          <ion-datetime displayFormat="MMM DD YY" placeholder="Eligir fecha" cancel-text="Cerrar" done-text="Elegir"
+            monthShortNames="Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic" [min]="minDate"
+            formControlName="dateLimit"></ion-datetime>
+        </ion-item>
+
+        <ion-row>
+          <ion-col size="6">
+            <ion-button type="button" (click)="close()" color="danger" expand="block" fill="clear" shape="round"
+              class="ion-text-capitalize">
+              Cerrar
+            </ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button type="submit" (click)="save()" color="success" expand="block" fill="clear" shape="round"
+              class="ion-text-capitalize" [disabled]="!form.valid || valueField.dirty">
+              Guardar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </form>
+
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'Rules'">
+      <app-rules-goal [goal]="currentGoal"></app-rules-goal>
+    </ng-container>
+
+
+  </ng-container>
+
+</ion-content>

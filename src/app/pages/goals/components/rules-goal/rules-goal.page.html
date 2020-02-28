@@ -1,0 +1,63 @@
+<form role="form" [formGroup]="form">
+
+  <ion-item>
+    <ion-label>Equipo</ion-label>
+    <ion-select placeholder="Elige uno" formControlName="team" okText="Elegir" cancelText="Cerrar">
+      <ion-select-option *ngFor="let team of teams$ | async" [value]="team">
+        {{ team.shortName }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Evento</ion-label>
+    <ion-select placeholder="Elige uno" formControlName="event" okText="Elegir" cancelText="Cerrar">
+      <ion-select-option value="Jugar">Jugar</ion-select-option>
+      <ion-select-option value="Ganar">Ganar</ion-select-option>
+      <ion-select-option value="Por gol">Por gol</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item class="ion-margin-top">
+    <ion-label position="floating">Valor por cada evento</ion-label>
+    <ion-input inputmode="numeric" type="number" formControlName="valueToSave"></ion-input>
+  </ion-item>
+
+
+  <ion-row>
+    <ion-col size="6">
+      <ion-button type="button" (click)="clearForm()" color="warning" expand="block" fill="clear" shape="round"
+        class="ion-text-capitalize">
+        Limpiar
+      </ion-button>
+    </ion-col>
+    <ion-col size="6">
+      <ion-button type="submit" (click)="save()" color="success" expand="block" fill="clear" shape="round"
+        class="ion-text-capitalize" [disabled]="!form.valid || valueToSaveField.dirty || countRules >= 5">
+        Guardar
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</form>
+
+
+<ng-container *ngIf="rules$ | async as rules">
+
+  <ion-list-header *ngIf="rules.length > 0">
+    <ion-label>
+      <ion-note>
+        <h3 class="ion-text-center">Reglas configuradas ({{rules.length}}/5)</h3>
+      </ion-note>
+    </ion-label>
+  </ion-list-header>
+
+  <ion-item *ngFor="let rule of rules" (click)="editRule(rule)">
+    <ion-label>
+      <h3> <b>Equipo:</b> {{ rule.team.shortName }}</h3>
+      <h3> <b>Evento:</b> {{ rule.event }}</h3>
+      <h3> <b>Valor:</b> {{ rule.valueToSave | currency  }}</h3>
+    </ion-label>
+    <ion-icon slot="end" name="bandage"></ion-icon>
+  </ion-item>
+
+</ng-container>

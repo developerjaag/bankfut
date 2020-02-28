@@ -11,8 +11,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { GoalState } from '@store/states/goals.state';
 
 // actions
-import { activeLoading } from '@store/actions/ui/ui.actions';
-import { requestAddOneGoal } from '@store/actions/goals/goals.actions';
+import { activeLoading, clearMessageToast } from '@store/actions/ui/ui.actions';
+import { requestAddOneGoal, requestEditOneGoal } from '@store/actions/goals/goals.actions';
 
 // selectors
 import { getLoading, getToast } from '@store/selectors/ui.selectors';
@@ -28,7 +28,7 @@ import { Goal } from '@models/goal.model';
 import { NotificationsService } from '@services/notifications.service';
 
 // components
-import { NewGoalPage } from './components/new-goal/new-goal.page';
+import { NewEditGoalPage } from './components/new-edit-goal/new-edit-goal.page';
 
 
 
@@ -44,6 +44,7 @@ export class GoalsPage implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
   toast$: Observable<Toast>;
   profile$: Observable<Profile>;
+  user: Profile;
 
   constructor(
     private store: Store<GoalState>,
@@ -70,7 +71,19 @@ export class GoalsPage implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe(toast => {
       if (toast.message != null) {
-        this.notificationsService.showToast(toast.message, toast.status);
+        const close = () => {
+          const action = clearMessageToast();
+          this.store.dispatch(action);
+        };
+        this.notificationsService.showToast(toast.message, toast.status, close);
+      }
+    });
+
+    this.profile$.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(profile => {
+      if (profile != null) {
+        this.user = profile;
       }
     });
 
@@ -78,15 +91,35 @@ export class GoalsPage implements OnInit, OnDestroy {
 
   async presentModalNewGoal() {
     const modal = await this.modalController.create({
-      component: NewGoalPage
+      component: NewEditGoalPage
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();
 
     if (data) {
+      data.uidUser = this.user.uid;
       this.dispatchLoading();
       this.dispatchNewGoal(data);
     }
+  }
+
+  async presentModalEditGoal(goal: Goal) {
+    const modal = await this.modalController.create({
+      component: NewEditGoalPage,
+      componentProps: {
+        goal
+      }
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+      if (data.numberRules) {
+        delete data.numberRules;
+      }
+      this.dispatchLoading();
+      this.dispatchEditGoal(data);
+    }
+
   }
 
   dispatchLoading() {
@@ -96,6 +129,11 @@ export class GoalsPage implements OnInit, OnDestroy {
 
   dispatchNewGoal(goal: Goal) {
     const action = requestAddOneGoal({ goal });
+    this.store.dispatch(action);
+  }
+
+  dispatchEditGoal(goal: Goal) {
+    const action = requestEditOneGoal({ goal });
     this.store.dispatch(action);
   }
 

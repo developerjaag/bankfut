@@ -1,4 +1,6 @@
 import { createAction, props } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
+
 
 import { Goal } from '@models/goal.model';
 
@@ -20,4 +22,14 @@ export const requestAddOneGoal = createAction(
 export const addOneGoal = createAction(
     '[GoalsModule] addOneGoal',
     props<{ goal: Goal }>()
+);
+
+export const requestEditOneGoal = createAction(
+    '[GoalsModule] requestEditOneGoal',
+    props<{ goal: Goal }>()
+);
+
+export const editOneGoal = createAction(
+    '[GoalsModule] editOneGoal',
+    props<{ goal: Update<Goal> }>()
 );

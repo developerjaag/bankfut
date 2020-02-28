@@ -1,9 +1,11 @@
-import { NewGoalPage } from './new-goal/new-goal.page';
+import { NewEditGoalPage } from './new-edit-goal/new-edit-goal.page';
+import { RulesGoalPage } from './rules-goal/rules-goal.page';
 
 export const COMPONENTS = [
-    NewGoalPage
+    NewEditGoalPage,
+    RulesGoalPage
 ];
 
 export const ENTRY_COMPONENTS: any[] = [
-    NewGoalPage
+    NewEditGoalPage
 ];

@@ -26,8 +26,7 @@
 
   <ng-container *ngIf="goals$ | async as goals">
 
-    <ng-container *ngIf="goals.length === 0">
-
+    <ng-container *ngIf="goals.length === 0; else elseListGoalsTemplate">
       <ion-grid style="height: 100%">
         <ion-row class="ion-align-items-center ion-justify-content-center" style="height: 100%; flex-direction: column">
 
@@ -39,8 +38,28 @@
           </ion-note>
         </ion-row>
       </ion-grid>
-
     </ng-container>
+
+    <ng-template #elseListGoalsTemplate>
+
+      <ion-item *ngFor="let goal of goals" (click)="presentModalEditGoal(goal)">
+
+        <ng-container *ngIf="goal.numberRules && goal.numberRules > 0; else elseNumberRulesTemplate">
+          <ion-badge color="success" slot="start">{{ goal.numberRules }}</ion-badge>
+        </ng-container>
+        <ng-template #elseNumberRulesTemplate>
+          <ion-badge color="danger" slot="start">0</ion-badge>          
+        </ng-template>
+        
+        <ion-label>
+          <h2>{{ goal.value | currency }}</h2>
+          <p *ngIf="goal.description"> {{ goal.description }} </p>
+        </ion-label>
+        <ion-icon name="settings" slot="end"></ion-icon>
+      </ion-item>
+
+    </ng-template>
+
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="goals.length > 0">
       <ion-fab-button (click)="presentModalNewGoal()" color="success">

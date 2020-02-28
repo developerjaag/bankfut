@@ -31,5 +31,12 @@ export class GoalService {
         return from(toReturn);
     }
 
+    updateGoal(goal: Goal) {
+        const toReturn = this.afs.collection('Goals').doc(goal.uid).update({
+            ...goal
+        });
+        return from(toReturn);
+    }
+
 }
 

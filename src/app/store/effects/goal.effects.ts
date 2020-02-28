@@ -3,7 +3,14 @@ import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { merge } from 'rxjs';
 import { switchMap, catchError, mergeMap } from 'rxjs/operators';
 
-import { addGoals, addOneGoal, requestAddGoals, requestAddOneGoal } from '@store/actions/goals/goals.actions';
+import {
+    addGoals,
+    addOneGoal,
+    editOneGoal,
+    requestAddGoals,
+    requestAddOneGoal,
+    requestEditOneGoal
+} from '@store/actions/goals/goals.actions';
 import { stopLoading, addMessageToast, clearMessageToast } from '@store/actions/ui/ui.actions';
 
 import { GoalService } from '@services/goals.service';
@@ -46,6 +53,35 @@ export class GoalEffects {
                     ]),
                     catchError(() => merge([
                         addMessageToast({ message: 'Ups!, algo salio adicionando tu meta', status: 'danger' }),
+                        clearMessageToast(),
+                        stopLoading()
+                    ])
+                    )
+                )
+            )
+        )
+    );
+
+
+    requestEditOneGoal$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(requestEditOneGoal),
+            switchMap(({ goal }) =>
+                this.goalService.updateGoal(goal).pipe(
+                    mergeMap(() => [
+                        editOneGoal({
+                            goal: {
+                                id: goal.uid,
+                                changes: {
+                                    ...goal
+                                }
+                            }
+                        }),
+                        addMessageToast({ message: 'Meta modificada!', status: 'success' }),
+                        stopLoading()
+                    ]),
+                    catchError(() => merge([
+                        addMessageToast({ message: 'Ups!, algo salio modificando tu meta', status: 'danger' }),
                         clearMessageToast(),
                         stopLoading()
                     ])
