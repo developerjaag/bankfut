@@ -9,6 +9,7 @@ import { uiReducer } from './ui.reducer';
 import { goalReducer } from './goals.reducer';
 import { teamsReducer } from './teams.reducer';
 import { ruleReducer } from './rules.reducer';
+import { matchesReducer } from './matches.reducer';
 
 
 // states
@@ -18,6 +19,7 @@ import { UIState } from '@store/states/ui.state';
 import { GoalState } from '@store/states/goals.state';
 import { TeamsState } from '@store/states/teams.state';
 import { RuleState } from '@store/states/rules.state';
+import { MatchesState } from '@store/states/matches.state';
 
 
 export const appReducers: ActionReducerMap<AppState> = {
@@ -26,7 +28,8 @@ export const appReducers: ActionReducerMap<AppState> = {
     ui: uiReducer,
     goals: goalReducer,
     teams: teamsReducer,
-    rules: ruleReducer
+    rules: ruleReducer,
+    matches: matchesReducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [] : [];
@@ -37,3 +40,4 @@ export const getUIState = createFeatureSelector<UIState>('ui');
 export const getGoalsState = createFeatureSelector<GoalState>('goals');
 export const getTeamsState = createFeatureSelector<TeamsState>('teams');
 export const getRulesState = createFeatureSelector<RuleState>('rules');
+export const getMatchesState = createFeatureSelector<MatchesState>('matches');

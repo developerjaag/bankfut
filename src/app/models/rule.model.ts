@@ -5,5 +5,6 @@ export interface Rule {
     uidGoal: string;
     team: Team;
     event: 'Jugar' | 'Por gol' | 'Ganar';
+    totalSaved?: number;
     valueToSave: number;
 }

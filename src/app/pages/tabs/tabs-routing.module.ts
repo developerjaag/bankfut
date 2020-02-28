@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
-import { GoalsGuard, TeamsGuard, RulesGuard } from '@guards/index';
+import { GoalsGuard, TeamsGuard, RulesGuard, MatchesGuard } from '@guards/index';
 
 const routes: Routes = [
   {
@@ -22,6 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'simulator',
+        canActivate: [MatchesGuard],
         children: [
           {
             path: '',

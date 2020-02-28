@@ -14,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content [fullscreen]="true" class="ion-padding-vertical">
 
   <ion-header collapse="condense">
     <ion-toolbar>
@@ -23,5 +23,94 @@
   </ion-header>
 
   <ion-progress-bar type="indeterminate" *ngIf="loading$ | async"></ion-progress-bar>
+
+  <ion-card *ngFor="let goal of goals">
+    <ion-card-header>
+      <ion-card-subtitle>Meta para el: {{ goal.dateLimit | date:'dd/MM/yyyy' }}</ion-card-subtitle>
+      <ion-card-title>{{ goal.value | currency }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-list *ngFor="let rule of filterRulesByGoal(goal.uid)">
+        <ion-list-header>
+          <ion-label>
+            <p>
+              {{ rule.team.shortName }} ({{ rule.event }} - {{ rule.valueToSave | currency }})
+            </p>
+          </ion-label>
+        </ion-list-header>
+
+        <ng-container *ngFor="let match of filterMatchByTeam(rule.team.id)">
+
+          <span [ngSwitch]="rule.event">
+            <p *ngSwitchCase="'Jugar'">
+              <b>JUGAR:</b> {{ rule.valueToSave | currency }} ahorrado por jugar contra
+              <ng-container *ngIf="match.homeTeam.id === rule.team.id; else elseOtherTeamTemplate">
+                {{ match.awayTeam.name }}
+              </ng-container>
+              <ng-template #elseOtherTeamTemplate>
+                {{ match.homeTeam.name }}
+              </ng-template>
+              el día {{ match.utcDate | date:'dd/MM/yyyy'  }}
+            </p>
+
+            <ng-container *ngSwitchCase="'Ganar'">
+
+              <ng-container *ngIf="match.homeTeam.id === rule.team.id && match.score.winner === 'HOME_TEAM'">
+                <p>
+                  <b>GANAR:</b> {{ rule.valueToSave | currency }} ahorrado por ganar contra
+                  {{ match.awayTeam.name }}
+                  el día {{ match.utcDate | date:'dd/MM/yyyy'  }}
+                </p>
+              </ng-container>
+
+              <ng-container *ngIf="match.awayTeam.id === rule.team.id && match.score.winner === 'AWAY_TEAM'">
+                <p>
+                  <b>GANAR:</b> {{ rule.valueToSave | currency }} ahorrado por ganar contra
+                  {{ match.homeTeam.name }}
+                  el día {{ match.utcDate | date:'dd/MM/yyyy'  }}
+                </p>
+              </ng-container>
+
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'Por gol'">
+
+              <ng-container *ngIf="match.score.fullTime.homeTeam > 0 || match.score.fullTime.awayTeam > 0">
+
+                <ng-container *ngIf="match.score.fullTime.homeTeam > 0  && rule.team.id === match.homeTeam.id">
+                  <p>
+                    <b>GOLES:</b> {{ rule.valueToSave * match.score.fullTime.homeTeam | currency }} ahorrado por anotar
+                    {{ match.score.fullTime.homeTeam }} contra {{ match.awayTeam.name }}
+                    el día {{ match.utcDate | date:'dd/MM/yyyy'  }}
+                  </p>
+                </ng-container>
+
+                <ng-container *ngIf="match.score.fullTime.awayTeam > 0  && rule.team.id === match.awayTeam.id">
+                  <p>
+                    <b>GOLES:</b> {{ rule.valueToSave * match.score.fullTime.awayTeam | currency }} ahorrado por anotar
+                    {{ match.score.fullTime.awayTeam }} contra {{ match.homeTeam.name }}
+                    el día {{ match.utcDate | date:'dd/MM/yyyy'  }}
+                  </p>
+                </ng-container>
+
+
+              </ng-container>
+
+
+            </ng-container>
+
+
+          </span>
+
+
+        </ng-container>
+
+      </ion-list>
+
+
+    </ion-card-content>
+  </ion-card>
+
 
 </ion-content>

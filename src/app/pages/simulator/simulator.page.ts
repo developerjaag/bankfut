@@ -1,23 +1,31 @@
 // core and third party libraries
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 
 // rxjs
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, combineLatest } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 // states
 import { GoalState } from '@store/states/goals.state';
 
 // actions
+import { activeLoading } from '@store/actions/ui/ui.actions';
 
 // selectors
 import { getLoading, getToast } from '@store/selectors/ui.selectors';
 import { getProfile } from '@store/selectors/auth.selectors';
+import { getAllGoals } from '@store/selectors/goals.selectors';
+import { getAllRules } from '@store/selectors/rules.selectors';
+import { getAllMatches } from '@store/selectors/matches.selectors';
 
 // models
 import { Toast } from '@models/toast.model';
 import { Profile } from '@models/profile.model';
+import { Goal } from '@models/goal.model';
+import { Rule } from '@models/rule.model';
+import { Match } from '@models/match.model';
 
 // services
 import { NotificationsService } from '@services/notifications.service';
@@ -36,6 +44,10 @@ export class SimulatorPage implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
   toast$: Observable<Toast>;
   profile$: Observable<Profile>;
+  goals: Goal[];
+  rules: Rule[];
+  matches: Match[];
+
 
   constructor(
     private store: Store<GoalState>,
@@ -50,6 +62,17 @@ export class SimulatorPage implements OnInit, OnDestroy {
     this.profile$ = this.store.pipe(
       select(getProfile)
     );
+    // tslint:disable-next-line: deprecation
+    combineLatest(
+      this.store.pipe(takeUntil(this.unsubscribe$), select(getAllGoals)),
+      this.store.pipe(takeUntil(this.unsubscribe$), select(getAllRules)),
+      this.store.pipe(takeUntil(this.unsubscribe$), select(getAllMatches))
+    ).subscribe(data => {
+      this.goals = data[0];
+      this.rules = data[1];
+      this.matches = data[2];
+    });
+
   }
 
   ngOnInit() {
@@ -62,6 +85,21 @@ export class SimulatorPage implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  filterRulesByGoal(uidGoal: string) {
+    return this.rules.filter(rule => rule.uidGoal === uidGoal);
+  }
+
+  filterMatchByTeam(idTeam: number) {
+    return this.matches.filter(match => {
+      return match.awayTeam.id === idTeam || match.homeTeam.id === idTeam;
+    });
+  }
+
+  private dispatchLoading() {
+    const action = activeLoading();
+    this.store.dispatch(action);
   }
 
   ngOnDestroy(): void {

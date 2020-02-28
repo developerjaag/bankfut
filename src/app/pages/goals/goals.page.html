@@ -42,15 +42,28 @@
 
     <ng-template #elseListGoalsTemplate>
 
+      <ion-button (click)="presentModalNewGoal()" class="ion-text-capitalize ion-margin-bottom" color="success"
+        expand="block" shape="round">
+        Nueva meta
+      </ion-button>
+
+      <ion-item-divider>
+        <ion-label>
+          <ion-note class="ion-text-center">
+            Tus metas creadas
+          </ion-note>
+        </ion-label>
+      </ion-item-divider>
+
       <ion-item *ngFor="let goal of goals" (click)="presentModalEditGoal(goal)">
 
         <ng-container *ngIf="goal.numberRules && goal.numberRules > 0; else elseNumberRulesTemplate">
           <ion-badge color="success" slot="start">{{ goal.numberRules }}</ion-badge>
         </ng-container>
         <ng-template #elseNumberRulesTemplate>
-          <ion-badge color="danger" slot="start">0</ion-badge>          
+          <ion-badge color="danger" slot="start">0</ion-badge>
         </ng-template>
-        
+
         <ion-label>
           <h2>{{ goal.value | currency }}</h2>
           <p *ngIf="goal.description"> {{ goal.description }} </p>
@@ -61,11 +74,11 @@
     </ng-template>
 
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="goals.length > 0">
+    <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="goals.length > 0">
       <ion-fab-button (click)="presentModalNewGoal()" color="success">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
-    </ion-fab>
+    </ion-fab> -->
 
   </ng-container>
 

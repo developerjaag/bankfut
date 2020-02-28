@@ -6,6 +6,7 @@ import { AuthState } from './auth.state';
 import { GoalState } from './goals.state';
 import { TeamsState } from './teams.state';
 import { RuleState } from './rules.state';
+import { MatchesState } from './matches.state';
 
 export interface AppState {
   auth: AuthState;
@@ -14,4 +15,5 @@ export interface AppState {
   goals: GoalState;
   teams: TeamsState;
   rules: RuleState;
+  matches: MatchesState;
 }
