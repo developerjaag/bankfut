@@ -1,5 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ng-container *ngIf="profile$ | async as profile">
+      <ion-chip slot="start">
+        <ion-avatar>
+          <img [src]="profile.avatar">
+        </ion-avatar>
+        <ion-label>{{ profile.name }}</ion-label>
+      </ion-chip>
+    </ng-container>
+
     <ion-title>
       Tus metas
     </ion-title>
@@ -9,14 +18,36 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">Tus metas</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <ion-progress-bar type="indeterminate" *ngIf="loading$ | async"></ion-progress-bar>
+
+  <ng-container *ngIf="goals$ | async as goals">
+
+    <ng-container *ngIf="goals.length === 0">
+
+      <ion-grid style="height: 100%">
+        <ion-row class="ion-align-items-center ion-justify-content-center" style="height: 100%; flex-direction: column">
+
+          <ion-note class="ion-text-center">
+            <h3>No tienes metas registradas</h3>
+            <ion-button expand="block" fill="clear" shape="round">
+              Crear meta
+            </ion-button>
+          </ion-note>
+        </ion-row>
+      </ion-grid>
+
+    </ng-container>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="goals.length > 0">
+      <ion-fab-button>
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ng-container>
 
 </ion-content>

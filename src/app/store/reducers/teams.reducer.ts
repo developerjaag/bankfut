@@ -1,28 +1,23 @@
 import { createReducer, on, Action } from '@ngrx/store';
 
-import { addGoals, addOneGoal } from '@store/actions/goals/goals.actions';
-import { GoalState, goalAdapter } from '@store/states/goals.state';
 
-import {  } from '@store/actions/teams.actions';
+import { TeamsState, teamAdapter } from '@store/states/teams.state';
+import { addTeams } from '@store/actions/teams/teams.actions';
 
 
-export const initialState: GoalState = goalAdapter.getInitialState({
+export const initialState: TeamsState = teamAdapter.getInitialState({
     // additional entity state properties
 });
 
 
-export const iGoalReducer = createReducer(
+export const iTeamsReducer = createReducer(
     initialState,
-    on(addGoals, (state, { goals }) => {
-        return goalAdapter.addAll(goals, state);
-    }),
-
-    on(addOneGoal, (state, { goal }) => {
-        return goalAdapter.addOne(goal, state);
+    on(addTeams, (state, { teams }) => {
+        return teamAdapter.addAll(teams, state);
     })
 
 );
 
-export function goalReducer(state: GoalState | undefined, action: Action) {
-    return iGoalReducer(state, action);
+export function teamsReducer(state: TeamsState | undefined, action: Action) {
+    return iTeamsReducer(state, action);
 }

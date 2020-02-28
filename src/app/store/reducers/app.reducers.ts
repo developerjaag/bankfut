@@ -7,6 +7,7 @@ import * as fromRouter from '@ngrx/router-store';
 import { authReducer } from './auth.reducer';
 import { uiReducer } from './ui.reducer';
 import { goalReducer } from './goals.reducer';
+import { teamsReducer } from './teams.reducer';
 
 
 // states
@@ -14,13 +15,15 @@ import { AppState } from '@store/states/app.state';
 import { AuthState } from '@store/states/auth.state';
 import { UIState } from '@store/states/ui.state';
 import { GoalState } from '@store/states/goals.state';
+import { TeamsState } from '@store/states/teams.state';
 
 
 export const appReducers: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
     auth: authReducer,
     ui: uiReducer,
-    goals: goalReducer
+    goals: goalReducer,
+    teams: teamsReducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [] : [];
@@ -29,3 +32,4 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [
 export const getAuthState = createFeatureSelector<AuthState>('auth');
 export const getUIState = createFeatureSelector<UIState>('ui');
 export const getGoalsState = createFeatureSelector<GoalState>('goals');
+export const getTeamsState = createFeatureSelector<TeamsState>('teams');

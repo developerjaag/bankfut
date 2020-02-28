@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
+import { GoalsGuard, TeamsGuard } from '@guards/index';
+
 const routes: Routes = [
   {
     path: '',
@@ -9,6 +11,7 @@ const routes: Routes = [
     children: [
       {
         path: 'goals',
+        canActivate: [GoalsGuard, TeamsGuard],
         children: [
           {
             path: '',
@@ -45,4 +48,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

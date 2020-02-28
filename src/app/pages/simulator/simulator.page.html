@@ -1,16 +1,27 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ng-container *ngIf="profile$ | async as profile">
+      <ion-chip slot="start">
+        <ion-avatar>
+          <img [src]="profile.avatar">
+        </ion-avatar>
+        <ion-label>{{ profile.name }}</ion-label>
+      </ion-chip>
+    </ng-container>
     <ion-title>
-      Tab 2
+      Simulador
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
+      <ion-title size="large">Simulador</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-progress-bar type="indeterminate" *ngIf="loading$ | async"></ion-progress-bar>
 
 </ion-content>

@@ -2,7 +2,7 @@ import { createAction, props } from '@ngrx/store';
 
 import { Team } from '@models/team.model';
 
-export const requestTeams = createAction(
+export const requestAddTeams = createAction(
     '[TeamsModule] requestAddTeams'
 );
 

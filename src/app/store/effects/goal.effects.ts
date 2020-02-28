@@ -20,7 +20,7 @@ export class GoalEffects {
                         addGoals({ goals }),
                         stopLoading()
                     ]),
-                    catchError(() => merge([
+                    catchError((err) => merge([
                         addMessageToast({ message: 'Ups!, algo salio mal listando tus metas', status: 'danger' }),
                         clearMessageToast(),
                         stopLoading()
