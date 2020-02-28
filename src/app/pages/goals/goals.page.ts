@@ -1,5 +1,6 @@
 // core and third party libraries
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 
 // rxjs
@@ -10,6 +11,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { GoalState } from '@store/states/goals.state';
 
 // actions
+import { activeLoading } from '@store/actions/ui/ui.actions';
+import { requestAddOneGoal } from '@store/actions/goals/goals.actions';
 
 // selectors
 import { getLoading, getToast } from '@store/selectors/ui.selectors';
@@ -25,6 +28,7 @@ import { Goal } from '@models/goal.model';
 import { NotificationsService } from '@services/notifications.service';
 
 // components
+import { NewGoalPage } from './components/new-goal/new-goal.page';
 
 
 
@@ -43,7 +47,8 @@ export class GoalsPage implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<GoalState>,
-    public notificationsService: NotificationsService
+    public notificationsService: NotificationsService,
+    public modalController: ModalController
   ) {
     this.loading$ = this.store.pipe(select(getLoading));
     this.toast$ = this.store.pipe(
@@ -69,6 +74,29 @@ export class GoalsPage implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  async presentModalNewGoal() {
+    const modal = await this.modalController.create({
+      component: NewGoalPage
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+
+    if (data) {
+      this.dispatchLoading();
+      this.dispatchNewGoal(data);
+    }
+  }
+
+  dispatchLoading() {
+    const action = activeLoading();
+    this.store.dispatch(action);
+  }
+
+  dispatchNewGoal(goal: Goal) {
+    const action = requestAddOneGoal({ goal });
+    this.store.dispatch(action);
   }
 
   ngOnDestroy(): void {

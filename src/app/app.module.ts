@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -47,6 +49,8 @@ const PROVIDERS = [
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(),
+    FormsModule,
+    ReactiveFormsModule,
     IonicStorageModule.forRoot(),
     AppRoutingModule,
 

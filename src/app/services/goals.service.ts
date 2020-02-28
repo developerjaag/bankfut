@@ -25,7 +25,7 @@ export class GoalService {
     addGoal(goal: Goal) {
         goal.uid = this.afs.createId();
         goal.createAt = firebase.firestore.FieldValue.serverTimestamp();
-        const toReturn = this.afs.collection<Goal>(`Visit`).doc(goal.uid).set({
+        const toReturn = this.afs.collection<Goal>(`Goals`).doc(goal.uid).set({
             ...goal
         });
         return from(toReturn);

@@ -15,7 +15,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tus metas</ion-title>
@@ -33,7 +33,7 @@
 
           <ion-note class="ion-text-center">
             <h3>No tienes metas registradas</h3>
-            <ion-button expand="block" fill="clear" shape="round">
+            <ion-button color="success" expand="block" fill="clear" shape="round" (click)="presentModalNewGoal()">
               Crear meta
             </ion-button>
           </ion-note>
@@ -43,7 +43,7 @@
     </ng-container>
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="goals.length > 0">
-      <ion-fab-button>
+      <ion-fab-button (click)="presentModalNewGoal()" color="success">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
